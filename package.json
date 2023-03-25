@@ -1,0 +1,37 @@
+{
+  "name": "repo-template",
+  "version": "0.0.1",
+  "description": "TODO",
+  "main": "TODO",
+  "files": [
+    "TODO"
+  ],
+  "engines": {
+    "node": ">=16",
+    "pnpm": ">=6"
+  },
+  "scripts": {
+    "lint": "eslint --ext .js src/ test/",
+    "test": "NODE_ENV=test mocha",
+    "coverage": "nyc npm test",
+    "coverage-gh": "nyc --reporter=lcov npm test && codecov"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexanderMac/repo-template.git"
+  },
+  "keywords": [
+    "TODO"
+  ],
+  "author": "Alexander Mac",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AlexanderMac/repo-template/issues"
+  },
+  "homepage": "https://github.com/AlexanderMac/repo-template#readme",
+  "devDependencies": {
+    "eslint": "^8.17.0",
+    "mocha": "^10.0.0",
+    "prettier": "^2.7.1"
+  }
+}
