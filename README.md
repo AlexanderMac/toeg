@@ -6,7 +6,7 @@
 
 ### Features
 Generates entities for TypeORM from a databases. Supports PostgreSQL engine only, but can be extend using Abstract driver.
-Inspired by https://github.com/Kononnable/typeorm-model-generator (unfortunately not supported anymore). There fork was created to implement two main features: skip indices and relations generation.
+Inspired by https://github.com/Kononnable/typeorm-model-generator (unfortunately not supported anymore). The fork was created to add two main features: skip indices and relations generation.
 
 ### Usage
 1. Add `toeg` to your project

@@ -10,22 +10,23 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [16.x, 18.x]
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v23
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Install pnpm
-        run: npm install -g pnpm
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7
 
       - name: Install Dependencies
-        run: pnpm setup && pnpm install && pnpm install -g codecov
+        run: pnpm install && pnpm install -g codecov
 
       - name: Lint codebase
         run: pnpm lint
@@ -34,7 +35,7 @@ jobs:
         run: npm test
 
       - name: Code coverage
-        run: pnpm coverage-gh
+        run: #pnpm coverage-gh
       
       - name: Upload coverage reports
-        uses: codecov/codecov-action@v1
+        uses: #codecov/codecov-action@v1
