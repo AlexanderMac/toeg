@@ -1,0 +1,38 @@
+{
+  "connection": {
+    "host": "127.0.0.1",
+    "port": 5432,
+    "ssl": false,
+    "user": "user",
+    "password": "password",
+    "databaseType": "postgres",
+    "databaseNames": [
+      "public"
+    ],
+    "schemaNames": [
+      "public"
+    ],
+    "onlyTables": [
+      "users"
+    ],
+    "skipTables": [
+      "posts"
+    ]
+  },
+  "generation": {
+    "outputPath": "./output",
+    "pluralizeNames": true,
+    "convertCaseFile": "pascal",
+    "convertCaseEntity": "pascal",
+    "convertCaseProperty": "camel",
+    "propertyVisibility": "none",
+    "lazy": false,
+    "activeRecord": false,
+    "generateConstructor": false,
+    "relationIds": false,
+    "strictMode": "none",
+    "skipSchema": false,
+    "indexFile": false,
+    "exportType": "named"
+  }
+}
