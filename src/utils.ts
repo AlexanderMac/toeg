@@ -1,15 +1,24 @@
 /* eslint-disable no-console */
 import { camelCase } from 'change-case';
-import { resolve } from 'path';
 
 import { Entity } from './models/entity';
 
+let isSilentMode: boolean;
+
+export function setSilentMode() {
+  isSilentMode = true;
+}
+
 export function logInfo(message: string) {
-  console.log(`[${new Date().toLocaleTimeString()}] ${message}`);
+  if (!isSilentMode) {
+    console.log(`[${new Date().toLocaleTimeString()}] ${message}`);
+  }
 }
 
 export function logWarn(message: string) {
-  console.warn(`\x1b[33m[${new Date().toLocaleTimeString()}] WARNING: ${message}\x1b[0m`);
+  if (!isSilentMode) {
+    console.warn(`\x1b[33m[${new Date().toLocaleTimeString()}] WARNING: ${message}\x1b[0m`);
+  }
 }
 
 export function logError(errText: string, sourceError?: Error): void {
@@ -17,10 +26,6 @@ export function logError(errText: string, sourceError?: Error): void {
   if (sourceError) {
     console.error(sourceError);
   }
-}
-
-export function resolvePath(...paths: string[]) {
-  return resolve(__dirname, '..', ...paths);
 }
 
 export function findNameForNewField(fieldName: string, entity: Entity, columnOldName = ''): string {

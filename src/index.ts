@@ -1,4 +1,5 @@
 import { readFile } from 'fs/promises';
+import { resolve } from 'path';
 
 import { AbstractDriver } from './drivers/abstract-driver';
 import { PostgresDriver } from './drivers/postgres-driver';
@@ -6,14 +7,16 @@ import { ConnectionOptions, getDefaultConnectionOptions } from './options/connec
 import { GenerationOptions, getDefaultGenerationOptions } from './options/generation-options';
 import { customizeEntities } from './processing/customization';
 import { generateModules } from './processing/generation';
-import { logError, logInfo, resolvePath } from './utils';
+import { logError, logInfo, setSilentMode } from './utils';
 
 (async function main() {
-  logInfo('Reading the config');
   const connectionOptions = getDefaultConnectionOptions();
   const generationOptions = getDefaultGenerationOptions();
   await readConfig(connectionOptions, generationOptions);
   validateConfig(connectionOptions, generationOptions);
+  if (generationOptions.silent) {
+    setSilentMode();
+  }
 
   logInfo(`Creating the ${connectionOptions.databaseType} database driver`);
   const driver = createDriver(connectionOptions.databaseType);
@@ -25,7 +28,8 @@ import { logError, logInfo, resolvePath } from './utils';
 })();
 
 async function readConfig(connectionOptions: ConnectionOptions, generationOptions: GenerationOptions) {
-  const toegConfigStr = await (await readFile(resolvePath('toeg.json'))).toString();
+  const configPath = resolve(process.cwd(), 'toeg.json');
+  const toegConfigStr = (await readFile(configPath)).toString();
   const toegConfig = JSON.parse(toegConfigStr);
   const { connection: loadedConnectionOptions, generation: loadedGenerationOptions } = toegConfig as any;
 

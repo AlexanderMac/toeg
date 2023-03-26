@@ -16,7 +16,7 @@
     "prepare": "husky install",
     "start": "ts-node-dev --rs --cls ./src/index.ts",
     "clean": "rm -rf ./dist",
-    "build": "pnpm clean && pnpm tsc --project tsconfig.dist.json && cp package.json dist/package.json",
+    "build": "pnpm clean && pnpm tsc --project tsconfig.dist.json && cp package.json dist/package.json && cp -r src/templates/ dist/templates/",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint ./src ./test --ext .ts --fix",
     "test": "NODE_ENV=test mocha",

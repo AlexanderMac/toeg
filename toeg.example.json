@@ -32,7 +32,10 @@
     "relationIds": false,
     "strictMode": "none",
     "skipSchema": false,
+    "skipIndices": false,
+    "skipRelations": false,
     "indexFile": false,
-    "exportType": "named"
+    "exportType": "named",
+    "silent": true
   }
 }

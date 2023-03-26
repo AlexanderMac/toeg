@@ -12,9 +12,12 @@ export interface GenerationOptions {
   generateConstructor: boolean;
   relationIds: boolean;
   strictMode: 'none' | '?' | '!';
+  skipIndices: boolean;
   skipSchema: boolean;
+  skipRelations: boolean;
   indexFile: boolean;
   exportType: 'named' | 'default';
+  silent: boolean;
 }
 
 export function getDefaultGenerationOptions(): GenerationOptions {
@@ -31,8 +34,11 @@ export function getDefaultGenerationOptions(): GenerationOptions {
     relationIds: false,
     strictMode: 'none',
     skipSchema: false,
+    skipIndices: false,
+    skipRelations: false,
     indexFile: false,
     exportType: 'named',
+    silent: false,
   };
 
   return generationOptions;

@@ -1,12 +1,13 @@
 import { camelCase, paramCase, pascalCase, snakeCase } from 'change-case';
 import { mkdir, readFile, rm, writeFile } from 'fs/promises';
 import * as Handlebars from 'handlebars';
+import { resolve } from 'path';
 
 import { Entity } from '../models/entity';
 import { Relation } from '../models/relation';
 import { ConnectionOptions } from '../options/connection-options';
 import { GenerationOptions } from '../options/generation-options';
-import { filterGeneratedEntities, resolvePath } from '../utils';
+import { filterGeneratedEntities } from '../utils';
 
 export async function generateModules(
   connectionOptions: ConnectionOptions,
@@ -15,7 +16,7 @@ export async function generateModules(
 ) {
   createHandlebarsHelpers(generationOptions);
 
-  const outputPath = generationOptions.outputPath;
+  const outputPath = resolve(process.cwd(), generationOptions.outputPath);
   await rm(outputPath, { force: true, recursive: true });
   await mkdir(outputPath, { recursive: true });
 
@@ -27,7 +28,7 @@ export async function generateModules(
 }
 
 async function createIndexFile(generationOptions: GenerationOptions, outputPath: string, entities: Entity[]) {
-  const templatePath = resolvePath('src', 'templates', 'index.mst');
+  const templatePath = resolve(__dirname, '..', 'templates', 'index.mst');
   const template = await readFile(templatePath, 'utf-8');
   const compliedTemplate = Handlebars.compile(template, {
     noEscape: true,
@@ -47,7 +48,7 @@ async function createIndexFile(generationOptions: GenerationOptions, outputPath:
       break;
   }
 
-  const resultFilePath = resolvePath(outputPath, `${fileName}.ts`);
+  const resultFilePath = resolve(outputPath, `${fileName}.ts`);
   await writeFile(resultFilePath, rendered, {
     encoding: 'utf-8',
     flag: 'w',
@@ -55,7 +56,7 @@ async function createIndexFile(generationOptions: GenerationOptions, outputPath:
 }
 
 async function generateEntities(generationOptions: GenerationOptions, outputPath: string, entities: Entity[]) {
-  const entityTemplatePath = resolvePath('src', 'templates', 'entity.mst');
+  const entityTemplatePath = resolve(__dirname, '..', 'templates', 'entity.mst');
   const entityTemplate = await readFile(entityTemplatePath, 'utf-8');
   const compliedTemplate = Handlebars.compile(entityTemplate, {
     noEscape: true,
@@ -80,7 +81,7 @@ async function generateEntities(generationOptions: GenerationOptions, outputPath
         throw new Error('Unknown case style');
     }
 
-    const resultFilePath = resolvePath(outputPath, `${casedFileName}.ts`);
+    const resultFilePath = resolve(outputPath, `${casedFileName}.ts`);
     const rendered = compliedTemplate(entity);
     const withImportStatements = removeUnusedImports(rendered);
 

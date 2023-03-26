@@ -17,6 +17,12 @@ export function customizeEntities(
 
   removeIndicesGeneratedByTypeorm(entities);
   removeColumnsInRelation(entities);
+  if (generationOptions.skipIndices) {
+    removeIndices(entities);
+  }
+  if (generationOptions.skipRelations) {
+    removeRelations(entities);
+  }
 
   changeRelationNames(entities);
   changeRelationIdNames(entities);
@@ -57,6 +63,18 @@ function removeColumnsInRelation(entities: Entity[]) {
         entity.indices.some(idx => idx.columns.some(v => v === column.tscName)) ||
         column.primary,
     );
+  });
+}
+
+function removeIndices(entities: Entity[]) {
+  entities.forEach(entity => {
+    entity.indices = [];
+  });
+}
+
+function removeRelations(entities: Entity[]) {
+  entities.forEach(entity => {
+    entity.relations = [];
   });
 }
 
