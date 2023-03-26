@@ -35,7 +35,7 @@ jobs:
         run: npm test
 
       - name: Code coverage
-        run: #pnpm coverage-gh
+        run: echo skip #pnpm coverage-gh
       
       - name: Upload coverage reports
-        uses: #codecov/codecov-action@v1
+        uses: echo skip #codecov/codecov-action@v1
