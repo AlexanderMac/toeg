@@ -1,5 +1,6 @@
 {
-    "ui": "bdd",
-    "reporter": "dot",
-    "recursive": true
+  "ui": "bdd",
+  "recursive": true,
+  "spec": "test/**/*.spec.ts",
+  "require": "ts-node/register"
 }

@@ -7,7 +7,9 @@
   "license": "MIT",
   "bin": "bin/toeg",
   "main": "./dist/index.js",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "engines": {
     "node": ">=16",
     "pnpm": ">=7"
@@ -19,7 +21,7 @@
     "build": "pnpm clean && pnpm tsc --project tsconfig.dist.json && cp package.json dist/package.json && cp -r src/templates/ dist/templates/",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint ./src ./test --ext .ts --fix",
-    "test": "NODE_ENV=test mocha",
+    "test": "mocha",
     "coverage": "nyc npm test",
     "coverage-gh": "nyc --reporter=lcov npm test && codecov"
   },
@@ -39,6 +41,7 @@
     "typeorm": "^0.3.12"
   },
   "devDependencies": {
+    "@types/mocha": "^10.0.1",
     "@types/node": "^18.15.9",
     "@types/pg": "^8.6.6",
     "@types/pluralize": "^0.0.29",
@@ -50,6 +53,7 @@
     "lint-staged": "^13.2.0",
     "mocha": "^10.0.0",
     "prettier": "^2.7.1",
+    "should": "^13.2.3",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.0.2"
   }
