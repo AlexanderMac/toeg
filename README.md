@@ -14,7 +14,7 @@ Inspired by https://github.com/Kononnable/typeorm-model-generator (unfortunately
 npm i -D toeg
 ```
 
-2. Then create a configuration file `toeg.json` using `toeg-example.json` as a base.
+2. Then create a configuration file `.toeg.json` using `.toeg-example.json` as a base.
 
 3. And finally run `toeg`:
 ```sh

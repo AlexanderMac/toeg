@@ -8,6 +8,7 @@
   "bin": "bin/toeg",
   "main": "./dist/index.js",
   "files": [
+    "bin",
     "dist"
   ],
   "engines": {
@@ -16,7 +17,7 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "start": "ts-node-dev --rs --cls ./src/index.ts",
+    "start": "ts-node-dev --rs --cls ./index.ts",
     "clean": "rm -rf ./dist",
     "build": "pnpm clean && pnpm tsc --project tsconfig.dist.json && cp package.json dist/package.json && cp -r src/templates/ dist/templates/",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",

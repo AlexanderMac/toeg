@@ -29,4 +29,4 @@ node_modules
 .jsbeautifyrc
 tsd.json
 typings
-toeg.json
+.toeg.json

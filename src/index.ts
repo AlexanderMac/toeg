@@ -29,7 +29,7 @@ export async function main() {
 }
 
 async function readConfig(connectionOptions: ConnectionOptions, generationOptions: GenerationOptions) {
-  const configPath = resolve(process.cwd(), 'toeg.json');
+  const configPath = resolve(process.cwd(), '.toeg.json');
   const toegConfigStr = (await readFile(configPath)).toString();
   const toegConfig = JSON.parse(toegConfigStr);
   const { connection: loadedConnectionOptions, generation: loadedGenerationOptions } = toegConfig as any;
