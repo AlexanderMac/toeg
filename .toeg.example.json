@@ -31,7 +31,6 @@
     "activeRecord": false,
     "generateConstructor": false,
     "relationIds": false,
-    "strictMode": "none",
     "skipSchema": false,
     "skipIndices": false,
     "skipRelations": false,

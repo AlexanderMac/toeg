@@ -6,7 +6,7 @@ import {{localImport (getEntityName entityName)}} from './{{getFileName fileName
 {{/inline}}
 {{#*inline 'Column'}}
 {{#generated}}@PrimaryGeneratedColumn({ type:'{{type}}', {{/generated}}{{^generated}}@Column('{{type}}',{ {{#primary}}primary:{{primary}},{{/primary}}{{/generated}}{{json options}}{{#default}},default: {{.}},{{/default}} })
-{{propertyVisibility}}{{getPropertyName tscName}}{{strictMode}}:{{tscType}}{{#if options.nullable}} | null{{/if}};
+{{propertyVisibility}}{{getPropertyName tscName}}{{strictMode options.nullable}}:{{tscType}}{{#if options.nullable}} | null{{/if}};
 
 {{/inline}}
 {{#*inline 'JoinColumnOptions'}}
@@ -16,12 +16,12 @@ import {{localImport (getEntityName entityName)}} from './{{getFileName fileName
 @{{relationType}}(()=>{{getEntityName relatedTable}},{{getPropertyName relatedTable}}=>{{getPropertyName relatedTable}}.{{getPropertyName relatedField}}{{#if relationOptions}},{ {{json relationOptions}} }{{/if}})
 {{#if joinColumnOptions}}@JoinColumn([{{#joinColumnOptions}}{{> JoinColumnOptions}}{{/joinColumnOptions}}]){{/if}}
 {{#joinTableOptions}}@JoinTable({ name:'{{name}}', joinColumns:[{{#joinColumns}}{{> JoinColumnOptions}}{{/joinColumns}}],inverseJoinColumns:[{{#inverseJoinColumns}}{{> JoinColumnOptions}}{{/inverseJoinColumns}}],{{#database}}database:'{{.}}',{{/database}}{{#schema}}schema:'{{.}}'{{/schema}} }){{/joinTableOptions}}
-{{propertyVisibility}}{{getPropertyName fieldName}}{{strictMode}}:{{getRelation (getEntityName relatedTable) relationType}};
+{{propertyVisibility}}{{getPropertyName fieldName}}{{strictMode options.nullable}}:{{getRelation (getEntityName relatedTable) relationType}};
 
 {{/inline}}
 {{#*inline 'RelationId'}}
 @RelationId(({{getPropertyName entityName}}:{{getEntityName entityName}})=>{{getPropertyName entityName}}.{{getPropertyName relationField}})
-{{propertyVisibility}}{{getPropertyName fieldName}}{{strictMode}}:{{fieldType}};
+{{propertyVisibility}}{{getPropertyName fieldName}}{{strictMode options.nullable}}:{{fieldType}};
 
 {{/inline}}
 {{#*inline 'Constructor'}}

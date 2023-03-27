@@ -118,9 +118,7 @@ function createHandlebarsHelpers(generationOptions: GenerationOptions) {
     generationOptions.exportType === 'default' ? entityName : `{${entityName}}`,
   );
 
-  Handlebars.registerHelper('strictMode', () =>
-    generationOptions.strictMode !== 'none' ? generationOptions.strictMode : '',
-  );
+  Handlebars.registerHelper('strictMode', (nullable: boolean) => (nullable ? '?' : '!'));
 }
 
 function getEntityName(entityName: string, generationOptions: GenerationOptions) {

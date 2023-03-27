@@ -12,7 +12,6 @@ export interface GenerationOptions {
   activeRecord: boolean;
   generateConstructor: boolean;
   relationIds: boolean;
-  strictMode: 'none' | '?' | '!';
   skipIndices: boolean;
   skipSchema: boolean;
   skipRelations: boolean;
@@ -34,7 +33,6 @@ export function getDefaultGenerationOptions(): GenerationOptions {
     activeRecord: false,
     generateConstructor: false,
     relationIds: false,
-    strictMode: 'none',
     skipSchema: false,
     skipIndices: false,
     skipRelations: false,
