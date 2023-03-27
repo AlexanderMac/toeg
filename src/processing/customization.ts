@@ -12,7 +12,9 @@ export function customizeEntities(
   entities: Entity[],
 ) {
   removeIndicesGeneratedByTypeorm(entities);
-  removeColumnsInRelation(entities);
+  if (!generationOptions.skipRelations) {
+    removeColumnsInRelation(entities);
+  }
   removeColumnDefaultProperties(entities, defaultValues);
   if (generationOptions.skipIndices) {
     removeIndices(entities);
