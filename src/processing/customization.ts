@@ -11,12 +11,9 @@ export function customizeEntities(
   defaultValues: DataTypeDefaults,
   entities: Entity[],
 ) {
-  if (generationOptions.pluralizeNames) {
-    namingStrategy.enablePluralization();
-  }
-
   removeIndicesGeneratedByTypeorm(entities);
   removeColumnsInRelation(entities);
+  removeColumnDefaultProperties(entities, defaultValues);
   if (generationOptions.skipIndices) {
     removeIndices(entities);
   }
@@ -24,14 +21,13 @@ export function customizeEntities(
     removeRelations(entities);
   }
 
-  changeRelationNames(entities);
-  changeRelationIdNames(entities);
+  changeRelationNames(entities, generationOptions.pluralizeNames);
+  changeRelationIdNames(entities, generationOptions.pluralizeNames);
   changeEntityNames(entities);
   changeColumnNames(entities);
   changeFileNames(entities);
 
   addImportsAndGenerationOptions(entities, generationOptions);
-  removeColumnDefaultProperties(entities, defaultValues);
 }
 
 function removeIndicesGeneratedByTypeorm(entities: Entity[]) {
@@ -66,18 +62,6 @@ function removeColumnsInRelation(entities: Entity[]) {
   });
 }
 
-function removeIndices(entities: Entity[]) {
-  entities.forEach(entity => {
-    entity.indices = [];
-  });
-}
-
-function removeRelations(entities: Entity[]) {
-  entities.forEach(entity => {
-    entity.relations = [];
-  });
-}
-
 function removeColumnDefaultProperties(entities: Entity[], defaultValues: DataTypeDefaults) {
   if (!defaultValues) {
     return;
@@ -106,6 +90,98 @@ function removeColumnDefaultProperties(entities: Entity[], defaultValues: DataTy
         }
       }
     });
+  });
+}
+
+function removeIndices(entities: Entity[]) {
+  entities.forEach(entity => {
+    entity.indices = [];
+  });
+}
+
+function removeRelations(entities: Entity[]) {
+  entities.forEach(entity => {
+    entity.relations = [];
+  });
+}
+
+function changeRelationNames(entities: Entity[], pluralizeNames: boolean) {
+  entities.forEach(entity => {
+    entity.relations.forEach(relation => {
+      const oldName = relation.fieldName;
+      let newName = namingStrategy.getRelationName(relation, pluralizeNames);
+      newName = findNameForNewField(newName, entity, oldName);
+
+      const relatedEntity = entities.find(v => v.tscName === relation.relatedTable)!;
+      const relation2 = relatedEntity.relations.find(v => v.fieldName === relation.relatedField)!;
+
+      entity.relationIds
+        .filter(v => v.relationField === oldName)
+        .forEach(v => {
+          v.relationField = newName;
+        });
+
+      relation.fieldName = newName;
+      relation2.relatedField = newName;
+
+      if (relation.relationOptions) {
+        entity.indices.forEach(ind => {
+          ind.columns.map(column2 => (column2 === oldName ? newName : column2));
+        });
+      }
+    });
+  });
+}
+
+function changeRelationIdNames(entities: Entity[], pluralizeNames: boolean) {
+  entities.forEach(entity => {
+    entity.relationIds.forEach(relationId => {
+      const oldName = relationId.fieldName;
+      const relation = entity.relations.find(v => v.fieldName === relationId.relationField)!;
+      let newName = namingStrategy.getRelationIdName(relationId, relation, pluralizeNames);
+      newName = findNameForNewField(newName, entity, oldName);
+      entity.indices.forEach(index => {
+        index.columns = index.columns.map(column2 => (column2 === oldName ? newName : column2));
+      });
+
+      relationId.fieldName = newName;
+    });
+  });
+}
+
+function changeColumnNames(entities: Entity[]) {
+  entities.forEach(entity => {
+    entity.columns.forEach(column => {
+      const oldName = column.tscName;
+      let newName = namingStrategy.getColumnName(column.tscName);
+      newName = findNameForNewField(newName, entity, oldName);
+      entity.indices.forEach(index => {
+        index.columns = index.columns.map(column2 => (column2 === oldName ? newName : column2));
+      });
+
+      column.tscName = newName;
+    });
+  });
+}
+
+function changeEntityNames(entities: Entity[]) {
+  entities.forEach(entity => {
+    const newName = namingStrategy.getEntityName(entity.tscName);
+    entities.forEach(entity2 => {
+      entity2.relations.forEach(relation => {
+        if (relation.relatedTable === entity.tscName) {
+          relation.relatedTable = newName;
+        }
+      });
+    });
+    entity.tscName = newName;
+    entity.fileName = newName;
+  });
+}
+
+function changeFileNames(entities: Entity[]) {
+  entities.forEach(entity => {
+    entity.fileName = namingStrategy.getFileName(entity.fileName);
   });
 }
 
@@ -140,85 +216,5 @@ function addImportsAndGenerationOptions(entities: Entity[], generationOptions: G
     if (generationOptions.generateConstructor) {
       entity.generateConstructor = true;
     }
-  });
-}
-
-function changeRelationIdNames(entities: Entity[]) {
-  entities.forEach(entity => {
-    entity.relationIds.forEach(relationId => {
-      const oldName = relationId.fieldName;
-      const relation = entity.relations.find(v => v.fieldName === relationId.relationField)!;
-      let newName = namingStrategy.relationIdName(relationId, relation);
-      newName = findNameForNewField(newName, entity, oldName);
-      entity.indices.forEach(index => {
-        index.columns = index.columns.map(column2 => (column2 === oldName ? newName : column2));
-      });
-
-      relationId.fieldName = newName;
-    });
-  });
-}
-
-function changeRelationNames(entities: Entity[]) {
-  entities.forEach(entity => {
-    entity.relations.forEach(relation => {
-      const oldName = relation.fieldName;
-      let newName = namingStrategy.relationName(relation);
-      newName = findNameForNewField(newName, entity, oldName);
-
-      const relatedEntity = entities.find(v => v.tscName === relation.relatedTable)!;
-      const relation2 = relatedEntity.relations.find(v => v.fieldName === relation.relatedField)!;
-
-      entity.relationIds
-        .filter(v => v.relationField === oldName)
-        .forEach(v => {
-          v.relationField = newName;
-        });
-
-      relation.fieldName = newName;
-      relation2.relatedField = newName;
-
-      if (relation.relationOptions) {
-        entity.indices.forEach(ind => {
-          ind.columns.map(column2 => (column2 === oldName ? newName : column2));
-        });
-      }
-    });
-  });
-}
-
-function changeColumnNames(entities: Entity[]) {
-  entities.forEach(entity => {
-    entity.columns.forEach(column => {
-      const oldName = column.tscName;
-      let newName = namingStrategy.columnName(column.tscName);
-      newName = findNameForNewField(newName, entity, oldName);
-      entity.indices.forEach(index => {
-        index.columns = index.columns.map(column2 => (column2 === oldName ? newName : column2));
-      });
-
-      column.tscName = newName;
-    });
-  });
-}
-
-function changeEntityNames(entities: Entity[]) {
-  entities.forEach(entity => {
-    const newName = namingStrategy.entityName(entity.tscName);
-    entities.forEach(entity2 => {
-      entity2.relations.forEach(relation => {
-        if (relation.relatedTable === entity.tscName) {
-          relation.relatedTable = newName;
-        }
-      });
-    });
-    entity.tscName = newName;
-    entity.fileName = newName;
-  });
-}
-
-function changeFileNames(entities: Entity[]) {
-  entities.forEach(entity => {
-    entity.fileName = namingStrategy.fileName(entity.fileName);
   });
 }

@@ -1,7 +1,8 @@
-import { camelCase, paramCase, pascalCase, snakeCase } from 'change-case';
+import { camelCase, capitalCase, paramCase, pascalCase, snakeCase } from 'change-case';
 import { mkdir, readFile, rm, writeFile } from 'fs/promises';
 import * as Handlebars from 'handlebars';
 import { resolve } from 'path';
+import { singular } from 'pluralize';
 
 import { Entity } from '../models/entity';
 import { Relation } from '../models/relation';
@@ -35,20 +36,7 @@ async function createIndexFile(generationOptions: GenerationOptions, outputPath:
   });
   const rendered = compliedTemplate({ entities: entities });
 
-  let fileName = 'index';
-  switch (generationOptions.convertCaseFile) {
-    case 'camel':
-      fileName = camelCase(fileName);
-      break;
-    case 'param':
-      fileName = paramCase(fileName);
-      break;
-    case 'pascal':
-      fileName = pascalCase(fileName);
-      break;
-  }
-
-  const resultFilePath = resolve(outputPath, `${fileName}.ts`);
+  const resultFilePath = resolve(outputPath, 'index.ts');
   await writeFile(resultFilePath, rendered, {
     encoding: 'utf-8',
     flag: 'w',
@@ -63,25 +51,8 @@ async function generateEntities(generationOptions: GenerationOptions, outputPath
   });
 
   await entities.map(entity => {
-    let casedFileName = '';
-    switch (generationOptions.convertCaseFile) {
-      case 'camel':
-        casedFileName = camelCase(entity.fileName);
-        break;
-      case 'param':
-        casedFileName = paramCase(entity.fileName);
-        break;
-      case 'pascal':
-        casedFileName = pascalCase(entity.fileName);
-        break;
-      case 'none':
-        casedFileName = entity.fileName;
-        break;
-      default:
-        throw new Error('Unknown case style');
-    }
-
-    const resultFilePath = resolve(outputPath, `${casedFileName}.ts`);
+    const newFileName = getFileName(entity.fileName, generationOptions);
+    const resultFilePath = resolve(outputPath, `${newFileName}.ts`);
     const rendered = compliedTemplate(entity);
     const withImportStatements = removeUnusedImports(rendered);
 
@@ -115,46 +86,15 @@ function createHandlebarsHelpers(generationOptions: GenerationOptions) {
   });
 
   Handlebars.registerHelper('getEntityName', (str: string) => {
-    switch (generationOptions.convertCaseEntity) {
-      case 'camel':
-        return camelCase(str);
-      case 'pascal':
-        return pascalCase(str);
-      case 'none':
-        return str;
-      default:
-        throw new Error('Unknown case style');
-    }
-  });
-
-  Handlebars.registerHelper('getFileName', (str: string) => {
-    switch (generationOptions.convertCaseFile) {
-      case 'camel':
-        return camelCase(str);
-      case 'param':
-        return paramCase(str);
-      case 'pascal':
-        return pascalCase(str);
-      case 'none':
-        return str;
-      default:
-        throw new Error('Unknown case style');
-    }
+    return getEntityName(str, generationOptions);
   });
 
   Handlebars.registerHelper('getPropertyName', (str: string) => {
-    switch (generationOptions.convertCaseProperty) {
-      case 'camel':
-        return camelCase(str);
-      case 'pascal':
-        return pascalCase(str);
-      case 'snake':
-        return snakeCase(str);
-      case 'none':
-        return str;
-      default:
-        throw new Error('Unknown case style');
-    }
+    return getPropertyName(str, generationOptions);
+  });
+
+  Handlebars.registerHelper('getFileName', (str: string) => {
+    return getFileName(str, generationOptions);
   });
 
   Handlebars.registerHelper('getRelation', (entityType: string, relationType: Relation['relationType']) => {
@@ -181,4 +121,72 @@ function createHandlebarsHelpers(generationOptions: GenerationOptions) {
   Handlebars.registerHelper('strictMode', () =>
     generationOptions.strictMode !== 'none' ? generationOptions.strictMode : '',
   );
+}
+
+function getEntityName(entityName: string, generationOptions: GenerationOptions) {
+  let newEntityName = '';
+  switch (generationOptions.entityCase) {
+    case 'camel':
+      newEntityName = camelCase(entityName);
+      break;
+    case 'pascal':
+      newEntityName = pascalCase(entityName);
+      break;
+    case 'none':
+      newEntityName = entityName;
+      break;
+    default:
+      throw new Error('Unknown case style');
+  }
+
+  if (!generationOptions.pluralizeNames) {
+    newEntityName = singular(newEntityName);
+  }
+  if (generationOptions.entityPostfix) {
+    newEntityName += capitalCase(generationOptions.entityPostfix);
+  }
+  return newEntityName;
+}
+
+function getPropertyName(propertyName: string, generationOptions: GenerationOptions) {
+  switch (generationOptions.propertyCase) {
+    case 'camel':
+      return camelCase(propertyName);
+    case 'pascal':
+      return pascalCase(propertyName);
+    case 'snake':
+      return snakeCase(propertyName);
+    case 'none':
+      return propertyName;
+    default:
+      throw new Error('Unknown case style');
+  }
+}
+
+function getFileName(fileName: string, generationOptions: GenerationOptions) {
+  let newFileName = '';
+  switch (generationOptions.fileCase) {
+    case 'camel':
+      newFileName = camelCase(fileName);
+      break;
+    case 'param':
+      newFileName = paramCase(fileName);
+      break;
+    case 'pascal':
+      newFileName = pascalCase(fileName);
+      break;
+    case 'none':
+      newFileName = fileName;
+      break;
+    default:
+      throw new Error('Unknown case style');
+  }
+
+  if (!generationOptions.pluralizeNames) {
+    newFileName = singular(newFileName);
+  }
+  if (generationOptions.entityPostfix) {
+    newFileName += '.' + generationOptions.entityPostfix;
+  }
+  return newFileName;
 }

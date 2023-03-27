@@ -22,9 +22,10 @@
   "generation": {
     "outputPath": "./output",
     "pluralizeNames": true,
-    "convertCaseFile": "pascal",
-    "convertCaseEntity": "pascal",
-    "convertCaseProperty": "camel",
+    "fileCase": "pascal",
+    "entityCase": "pascal",
+    "propertyCase": "camel",
+    "entityPostfix": "",
     "propertyVisibility": "none",
     "lazy": false,
     "activeRecord": false,
