@@ -9,11 +9,12 @@ import { customizeEntities } from './processing/customization';
 import { generateModules } from './processing/generation';
 import { logError, logInfo, setSilentMode } from './utils';
 
-(async function main() {
+export async function main() {
   const connectionOptions = getDefaultConnectionOptions();
   const generationOptions = getDefaultGenerationOptions();
   await readConfig(connectionOptions, generationOptions);
   validateConfig(connectionOptions, generationOptions);
+
   if (generationOptions.silent) {
     setSilentMode();
   }
@@ -25,7 +26,7 @@ import { logError, logInfo, setSilentMode } from './utils';
   await createModelFromDatabase(driver, connectionOptions, generationOptions);
 
   logInfo('Done');
-})();
+}
 
 async function readConfig(connectionOptions: ConnectionOptions, generationOptions: GenerationOptions) {
   const configPath = resolve(process.cwd(), 'toeg.json');

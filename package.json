@@ -21,7 +21,7 @@
     "build": "pnpm clean && pnpm tsc --project tsconfig.dist.json && cp package.json dist/package.json && cp -r src/templates/ dist/templates/",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "eslint ./src ./test --ext .ts --fix",
-    "test": "mocha",
+    "test": "NODE_ENV=test mocha",
     "coverage": "nyc npm test",
     "coverage-gh": "nyc --reporter=lcov npm test && codecov"
   },
