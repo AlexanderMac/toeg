@@ -1,6 +1,6 @@
 {
   "name": "toeg",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Generates entities for TypeORM from a database ",
   "keywords": [],
   "author": "Alexander Mac",
@@ -17,6 +17,7 @@
   },
   "scripts": {
     "prepare": "husky install",
+    "prepublish": "pnpm build",
     "start": "ts-node-dev --rs --cls ./index.ts",
     "clean": "rm -rf ./dist",
     "build": "pnpm clean && pnpm tsc --project tsconfig.dist.json && cp package.json dist/package.json && cp -r src/templates/ dist/templates/",
