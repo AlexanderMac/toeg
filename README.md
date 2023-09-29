@@ -1,8 +1,13 @@
-# toeg
-
-[![Build Status](https://github.com/AlexanderMac/toeg/workflows/CI/badge.svg)](https://github.com/AlexanderMac/toeg/actions?query=workflow%3ACI)
-[![Code Coverage](https://codecov.io/gh/AlexanderMac/toeg/branch/master/graph/badge.svg)](https://codecov.io/gh/AlexanderMac/toeg)
-[![npm version](https://badge.fury.io/js/toeg.svg)](https://badge.fury.io/js/toeg)
+<p align="center">
+  <h1 align="center">toeg</h1>
+  <p align="center">Generates entities for TypeORM from a databases.</p>
+  <p align="center">
+    <a href="https://github.com/alexandermac/toeg/actions/workflows/ci.yml?query=branch%3Amaster"><img src="https://github.com/alexandermac/toeg/actions/workflows/ci.yml/badge.svg" alt="Build Status"></a>
+    <!--<a href="https://codecov.io/gh/AlexanderMac/toeg"><img src="https://codecov.io/gh/AlexanderMac/toeg/branch/master/graph/badge.svg" alt="Code Coverage"></a>-->
+    <a href="LICENSE"><img src="https://img.shields.io/github/license/alexandermac/toeg.svg" alt="License"></a>
+    <a href="https://badge.fury.io/js/toeg"><img src="https://badge.fury.io/js/toeg.svg" alt="npm version"></a>
+  </p>
+</p>
 
 ### Features
 Generates entities for TypeORM from a databases. Supports PostgreSQL engine only, but can be extend using Abstract driver.
