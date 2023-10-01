@@ -2,7 +2,7 @@
   <h1 align="center">toeg</h1>
   <p align="center">Generates entities for TypeORM from a databases.</p>
   <p align="center">
-    <a href="https://github.com/alexandermac/toeg/actions/workflows/ci.yml?query=branch%3Amaster"><img src="https://github.com/alexandermac/toeg/actions/workflows/ci.yml/badge.svg" alt="Build Status"></a>
+    <a href="https://github.com/AlexanderMac/toeg/actions/workflows/ci.yml"><img src="https://github.com/alexandermac/toeg/actions/workflows/ci.yml/badge.svg" alt="Build Status"></a>
     <!--<a href="https://codecov.io/gh/AlexanderMac/toeg"><img src="https://codecov.io/gh/AlexanderMac/toeg/branch/master/graph/badge.svg" alt="Code Coverage"></a>-->
     <a href="LICENSE"><img src="https://img.shields.io/github/license/alexandermac/toeg.svg" alt="License"></a>
     <a href="https://badge.fury.io/js/toeg"><img src="https://badge.fury.io/js/toeg.svg" alt="npm version"></a>
